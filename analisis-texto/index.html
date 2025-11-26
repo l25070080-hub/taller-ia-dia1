@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analizador de Texto</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Analizador de Texto</h1>
+            <p class="subtitle">Análisis en tiempo real de tu contenido</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Sección del textarea -->
+            <div class="editor-section">
+                <textarea 
+                    id="textInput" 
+                    class="text-editor" 
+                    placeholder="Escribe aquí tu texto para analizarlo en tiempo real..."
+                    spellcheck="true">
+                </textarea>
+            </div>
+
+            <!-- Sección de estadísticas -->
+            <div class="statistics-section">
+                <h2>Estadísticas</h2>
+                
+                <div class="stats-grid">
+                    <!-- Estadística: Caracteres con espacios -->
+                    <div class="stat-card stat-characters-with-spaces">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-content">
+                            <h3>Caracteres</h3>
+                            <div class="stat-value" id="charactersWithSpaces">0</div>
+                            <p class="stat-label">(incluyendo espacios)</p>
+                        </div>
+                    </div>
+
+                    <!-- Estadística: Caracteres sin espacios -->
+                    <div class="stat-card stat-characters-no-spaces">
+                        <div class="stat-icon">🔤</div>
+                        <div class="stat-content">
+                            <h3>Caracteres</h3>
+                            <div class="stat-value" id="charactersNoSpaces">0</div>
+                            <p class="stat-label">(sin espacios)</p>
+                        </div>
+                    </div>
+
+                    <!-- Estadística: Número de palabras -->
+                    <div class="stat-card stat-words">
+                        <div class="stat-icon">📄</div>
+                        <div class="stat-content">
+                            <h3>Palabras</h3>
+                            <div class="stat-value" id="wordCount">0</div>
+                            <p class="stat-label">total</p>
+                        </div>
+                    </div>
+
+                    <!-- Estadística: Número de oraciones -->
+                    <div class="stat-card stat-sentences">
+                        <div class="stat-icon">✍️</div>
+                        <div class="stat-content">
+                            <h3>Oraciones</h3>
+                            <div class="stat-value" id="sentenceCount">0</div>
+                            <p class="stat-label">total</p>
+                        </div>
+                    </div>
+
+                    <!-- Estadística: Tiempo de lectura -->
+                    <div class="stat-card stat-reading-time">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-content">
+                            <h3>Tiempo de lectura</h3>
+                            <div class="stat-value" id="readingTime">0 min</div>
+                            <p class="stat-label">a 200 palabras/min</p>
+                        </div>
+                    </div>
+
+                    <!-- Estadística: Promedio de palabras por oración -->
+                    <div class="stat-card stat-avg-words">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-content">
+                            <h3>Promedio</h3>
+                            <div class="stat-value" id="avgWordsPerSentence">0</div>
+                            <p class="stat-label">palabras/oración</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de botones -->
+            <div class="buttons-section">
+                <button class="btn btn-copy" id="copyStatsBtn">
+                    📋 Copiar Estadísticas
+                </button>
+                <button class="btn btn-clear" id="clearBtn">
+                    🗑️ Limpiar
+                </button>
+            </div>
+
+            <!-- Mensaje de confirmación -->
+            <div class="confirmation-message" id="confirmationMsg">
+                ✓ Estadísticas copiadas al portapapeles
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

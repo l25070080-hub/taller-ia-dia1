@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Colores Aleatorios</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Generador de Colores Aleatorios</h1>
+        
+        <div class="color-display" id="colorDisplay"></div>
+        
+        <div class="color-info">
+            <p id="colorCode">#FFFFFF</p>
+            <button class="btn btn-copy" id="copyBtn" onclick="copiarAlPortapapeles()">
+                Copiar Código
+            </button>
+        </div>
+        
+        <button class="btn btn-generate" id="generateBtn" onclick="generarColor()">
+            Generar Color
+        </button>
+        
+        <div class="confirmation-message" id="confirmationMsg">
+            ¡Código copiado!
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reloj Digital con Alarma</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Saludo dinámico según la hora del día -->
+        <div class="greeting" id="greeting">Buenos días</div>
+
+        <!-- Display principal del reloj -->
+        <div class="clock-display">
+            <div class="time" id="time">00:00:00</div>
+            <div class="date" id="date">Lunes, 01 de enero de 2024</div>
+        </div>
+
+        <!-- Botón toggle para cambiar entre formato 12h/24h -->
+        <div class="mode-toggle">
+            <button class="toggle-btn" id="modeToggle">Cambiar a 12h</button>
+        </div>
+
+        <!-- Sección de configuración de alarma -->
+        <div class="alarm-section">
+            <h2>Configurar Alarma</h2>
+            
+            <div class="alarm-input-group">
+                <label for="alarmTime">Selecciona hora de alarma:</label>
+                <input type="time" id="alarmTime" class="alarm-input">
+            </div>
+
+            <div class="alarm-buttons">
+                <button class="btn btn-set" id="setAlarmBtn" onclick="establecerAlarma()">
+                    Establecer Alarma
+                </button>
+                <button class="btn btn-cancel" id="cancelAlarmBtn" onclick="cancelarAlarma()" disabled>
+                    Cancelar Alarma
+                </button>
+            </div>
+
+            <!-- Indicador de alarma activa -->
+            <div class="alarm-status" id="alarmStatus">
+                <span class="status-indicator"></span>
+                <span class="status-text">Sin alarma configurada</span>
+            </div>
+        </div>
+
+        <!-- Área de notificación para la alarma -->
+        <div class="alarm-notification" id="alarmNotification">
+            <div class="notification-content">
+                <h3>¡ALARMA!</h3>
+                <p>La alarma ha sonado</p>
+                <button class="btn btn-dismiss" onclick="desactivarAlarma()">Desactivar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
