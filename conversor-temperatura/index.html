@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Convertidor Celsius → Fahrenheit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="container">
+      <div class="card">
+        <header class="card-header">
+          <h1>Convertidor de Temperatura</h1>
+          <p class="lead">Celsius → Fahrenheit — rápido y bonito</p>
+        </header>
+
+        <form id="converter" class="form" onsubmit="return false;">
+          <label for="celsius">Temperatura en Celsius</label>
+          <div class="input-row">
+            <input id="celsius" name="celsius" type="number" step="any" placeholder="e.g. 25" autofocus />
+            <button id="convertBtn" class="btn primary">Convertir</button>
+          </div>
+
+          <div class="result" id="result" aria-live="polite">—</div>
+
+          <div class="extras">
+            <small class="formula">F = (C × 9/5) + 32</small>
+            <button id="resetBtn" class="btn ghost" type="button">Limpiar</button>
+          </div>
+        </form>
+      </div>
+
+      <footer class="attribution">Hecho con ❤ — abre `index.html` en tu navegador</footer>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

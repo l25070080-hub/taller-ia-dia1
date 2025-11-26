@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intro al DOM</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .caja {
+            width: 100px;
+            height: 100px;
+            background-color: lightblue;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Manipulando el DOM con JS</h1>
+    
+    <div id="miCaja" class="caja">Caja</div>
+    
+    <button id="btnCambiarColor">Cambiar Color</button>
+    <button id="btnCambiarTexto">Cambiar Texto</button>
+
+        <!-- Calculadora básica -->
+        <section id="calculadora">
+            <h2>Calculadora básica</h2>
+            <label for="num1">Número 1:</label>
+            <input id="num1" type="text" />
+            <label for="num2">Número 2:</label>
+            <input id="num2" type="text" />
+
+            <div style="margin-top:8px;">
+                <button id="btnSumar">Sumar</button>
+                <button id="btnRestar">Restar</button>
+                <button id="btnMultiplicar">Multiplicar</button>
+                <button id="btnDividir">Dividir</button>
+            </div>
+
+            <p>Resultado: <span id="resultado">--</span></p>
+        </section>
+
+    <script src="dom.js"></script>
+</body>
+</html>
+
+
