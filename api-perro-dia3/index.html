@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐕 Galería de Perros Aleatorios</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            color: white;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Controles */
+        .controls {
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        select#razaSelect,
+        input#cantidadInput {
+            padding: 12px 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        select#razaSelect:hover,
+        input#cantidadInput:hover,
+        select#razaSelect:focus,
+        input#cantidadInput:focus {
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.15);
+            outline: none;
+        }
+
+        select#razaSelect option {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            box-shadow: 0 5px 20px rgba(245, 87, 108, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(245, 87, 108, 0.6);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: white;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 5px solid rgba(255, 255, 255, 0.2);
+            border-top: 5px solid white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Galería */
+        .gallery-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .dog-card {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: fadeInScale 0.6s ease-out backwards;
+            background: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .dog-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .dog-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .dog-card:hover .dog-image {
+            transform: scale(1.1);
+        }
+
+        .dog-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+            display: flex;
+            align-items: flex-end;
+            padding: 25px;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .dog-card:hover .dog-overlay {
+            opacity: 1;
+        }
+
+        .dog-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Error */
+        .error {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 25px;
+            background: rgba(244, 67, 54, 0.2);
+            border: 2px solid rgba(244, 67, 54, 0.6);
+            border-radius: 15px;
+            color: #ffebee;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        /* No hay resultados */
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: white;
+        }
+
+        .no-results h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        /* Botón infinito */
+        .load-more-container {
+            text-align: center;
+            margin: 50px 0;
+        }
+
+        .btn-load-more {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-load-more:hover {
+            border-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .controls {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 15px;
+            }
+
+            .dog-image {
+                height: 200px;
+            }
+
+            .dog-card:hover {
+                transform: translateY(-10px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .gallery {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .dog-image {
+                height: 250px;
+            }
+
+            .controls {
+                padding: 15px;
+            }
+
+            .btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>🐕 Galería de Perros</h1>
+        <p class="subtitle">Descubre perros adorables al azar</p>
+    </div>
+
+    <!-- Controles -->
+    <div class="controls">
+        <div class="control-group">
+            <select id="razaSelect">
+                <option value="">Todas las razas</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <input 
+                type="number" 
+                id="cantidadInput" 
+                min="1" 
+                max="50" 
+                value="12"
+                placeholder="Cantidad (1-50)"
+            />
+        </div>
+        <div class="control-group">
+            <button id="generateBtn" class="btn btn-primary">🎲 Generar</button>
+            <button id="clearBtn" class="btn btn-secondary">🗑️ Limpiar</button>
+        </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p style="font-size: 1.2rem;">Cargando perros adorables...</p>
+    </div>
+
+    <!-- Error -->
+    <div id="error" class="error"></div>
+
+    <!-- Galería -->
+    <div class="gallery-container">
+        <div id="gallery" class="gallery"></div>
+        <div id="noResults" class="no-results" style="display: none;">
+            <h2>😢 No se encontraron resultados</h2>
+            <p>Intenta con otra raza o cantidad</p>
+        </div>
+    </div>
+
+    <!-- Cargar más -->
+    <div class="load-more-container" id="loadMoreContainer" style="display: none;">
+        <button id="loadMoreBtn" class="btn btn-load-more">📸 Cargar más perros</button>
+    </div>
+
+    <script src="api.js"></script>
+    <script>
+        /**
+         * Controlador de la Galería de Perros
+         */
+
+        // Referencias al DOM
+        const razaSelect = document.getElementById('razaSelect');
+        const cantidadInput = document.getElementById('cantidadInput');
+        const generateBtn = document.getElementById('generateBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const gallery = document.getElementById('gallery');
+        const loading = document.getElementById('loading');
+        const errorEl = document.getElementById('error');
+        const noResults = document.getElementById('noResults');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        const loadMoreContainer = document.getElementById('loadMoreContainer');
+
+        // Estado
+        let razaActual = '';
+        let cantidadActual = 12;
+
+        /**
+         * Muestra mensaje de error
+         */
+        function mostrarError(mensaje) {
+            errorEl.textContent = mensaje;
+            errorEl.classList.add('show');
+            loading.classList.remove('show');
+            setTimeout(() => errorEl.classList.remove('show'), 5000);
+        }
+
+        /**
+         * Limpia el error
+         */
+        function limpiarError() {
+            errorEl.classList.remove('show');
+        }
+
+        /**
+         * Crea una tarjeta de perro
+         */
+        function crearTarjeta(urlImagen, nombreRaza = '') {
+            const card = document.createElement('div');
+            card.className = 'dog-card';
+
+            const img = document.createElement('img');
+            img.src = urlImagen;
+            img.alt = 'Perro';
+            img.className = 'dog-image';
+
+            const overlay = document.createElement('div');
+            overlay.className = 'dog-overlay';
+
+            const nombre = document.createElement('div');
+            nombre.className = 'dog-name';
+            nombre.textContent = nombreRaza || '🐕 Perrito';
+
+            overlay.appendChild(nombre);
+            card.appendChild(img);
+            card.appendChild(overlay);
+
+            // Click para descargar
+            card.addEventListener('click', () => {
+                descargarImagen(urlImagen);
+            });
+
+            return card;
+        }
+
+        /**
+         * Descarga la imagen
+         */
+        function descargarImagen(url) {
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'perro.jpg';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        /**
+         * Carga las razas en el select
+         */
+        function cargarRazas() {
+            obtenerRazasFormato()
+                .then(razas => {
+                    razas.forEach(raza => {
+                        const option = document.createElement('option');
+                        option.value = raza.id;
+                        option.textContent = raza.nombre;
+                        razaSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error cargando razas:', error);
+                    mostrarError('Error al cargar las razas');
+                });
+        }
+
+        /**
+         * Genera la galería
+         */
+        function generar() {
+            const raza = razaSelect.value;
+            const cantidad = Math.min(parseInt(cantidadInput.value) || 12, 50);
+
+            if (cantidad < 1) {
+                mostrarError('La cantidad debe ser al menos 1');
+                return;
+            }
+
+            razaActual = raza;
+            cantidadActual = cantidad;
+
+            loading.classList.add('show');
+            limpiarError();
+            gallery.innerHTML = '';
+            noResults.style.display = 'none';
+            loadMoreContainer.style.display = 'none';
+
+            const promesa = raza 
+                ? obtenerPerrosPorRaza(raza, cantidad)
+                : obtenerPerrosAleatorios(cantidad);
+
+            promesa
+                .then(imagenes => {
+                    loading.classList.remove('show');
+
+                    if (imagenes.length === 0) {
+                        noResults.style.display = 'block';
+                        return;
+                    }
+
+                    imagenes.forEach((url, index) => {
+                        const tarjeta = crearTarjeta(url, raza ? razaSelect.options[razaSelect.selectedIndex].text : '');
+                        // Retraso en la animación
+                        setTimeout(() => {
+                            gallery.appendChild(tarjeta);
+                        }, index * 50);
+                    });
+
+                    loadMoreContainer.style.display = 'block';
+                })
+                .catch(error => {
+                    loading.classList.remove('show');
+                    mostrarError(error.message || 'Error al cargar los perros');
+                });
+        }
+
+        /**
+         * Cargar más perros
+         */
+        function cargarMas() {
+            const promesa = razaActual
+                ? obtenerPerrosPorRaza(razaActual, cantidadActual)
+                : obtenerPerrosAleatorios(cantidadActual);
+
+            loading.classList.add('show');
+
+            promesa
+                .then(imagenes => {
+                    loading.classList.remove('show');
+                    imagenes.forEach((url, index) => {
+                        const tarjeta = crearTarjeta(url, razaSelect.options[razaSelect.selectedIndex].text);
+                        setTimeout(() => {
+                            gallery.appendChild(tarjeta);
+                        }, index * 50);
+                    });
+                })
+                .catch(error => {
+                    loading.classList.remove('show');
+                    mostrarError('Error al cargar más perros');
+                });
+        }
+
+        /**
+         * Limpia todo
+         */
+        function limpiar() {
+            gallery.innerHTML = '';
+            razaSelect.value = '';
+            cantidadInput.value = '12';
+            noResults.style.display = 'none';
+            loadMoreContainer.style.display = 'none';
+            limpiarError();
+        }
+
+        // Event Listeners
+        generateBtn.addEventListener('click', generar);
+        clearBtn.addEventListener('click', limpiar);
+        loadMoreBtn.addEventListener('click', cargarMas);
+
+        // Enter en cantidad
+        cantidadInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') generar();
+        });
+
+        // Cargar razas y generar inicial
+        cargarRazas();
+        setTimeout(generar, 500);
+
+        console.log('🐕 Galería de perros lista');
+    </script>
+</body>
+</html>

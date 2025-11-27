@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐱 Cuidando a Taco - Tamagotchi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .edad-display {
+            color: #999;
+            font-size: 0.85rem;
+            margin-top: 8px;
+        }
+
+        /* Área del gato */
+        .taco-area {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 3px dashed rgba(102, 126, 234, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 25px;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .taco-emoji {
+            font-size: 6rem;
+            margin-bottom: 15px;
+            animation: bounce 2s ease-in-out infinite;
+            transition: transform 0.3s ease;
+        }
+
+        .taco-emoji.eat {
+            animation: eat 0.6s ease-out;
+        }
+
+        .taco-emoji.sleep {
+            animation: sleep 0.8s ease-out;
+        }
+
+        .taco-emoji.play {
+            animation: play 0.6s ease-out;
+        }
+
+        .taco-emoji.pet {
+            animation: pet 0.5s ease-out;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes eat {
+            0% { transform: scale(1) rotateZ(0deg); }
+            25% { transform: scale(1.1) rotateZ(-5deg); }
+            50% { transform: scale(1.1) rotateZ(5deg); }
+            75% { transform: scale(1.1) rotateZ(-5deg); }
+            100% { transform: scale(1) rotateZ(0deg); }
+        }
+
+        @keyframes sleep {
+            0% { transform: rotateZ(0deg); }
+            50% { transform: rotateZ(-15deg); }
+            100% { transform: rotateZ(0deg); }
+        }
+
+        @keyframes play {
+            0% { transform: translateY(0) rotateZ(0deg); }
+            25% { transform: translateY(-15px) rotateZ(-10deg); }
+            50% { transform: translateY(-30px) rotateZ(10deg); }
+            75% { transform: translateY(-15px) rotateZ(-10deg); }
+            100% { transform: translateY(0) rotateZ(0deg); }
+        }
+
+        @keyframes pet {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .taco-nombre {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .taco-chat {
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 15px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Estadísticas */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #f5f5f5;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card.hambre {
+            border-left-color: #ff6b6b;
+        }
+
+        .stat-card.energia {
+            border-left-color: #ffd93d;
+        }
+
+        .stat-card.felicidad {
+            border-left-color: #ff6b9d;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #999;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .stat-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .stat-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s ease;
+        }
+
+        .stat-card.hambre .stat-bar-fill {
+            background: linear-gradient(90deg, #ff6b6b 0%, #ff5252 100%);
+        }
+
+        .stat-card.energia .stat-bar-fill {
+            background: linear-gradient(90deg, #ffd93d 0%, #ffb300 100%);
+        }
+
+        .stat-card.felicidad .stat-bar-fill {
+            background: linear-gradient(90deg, #ff6b9d 0%, #ff4757 100%);
+        }
+
+        /* Recomendación */
+        .recomendacion {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 152, 0, 0.1));
+            border-left: 4px solid #ffc107;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            color: #e65100;
+            font-weight: 600;
+        }
+
+        /* Botones de acciones */
+        .actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-alimentar {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+            color: white;
+            grid-column: 1;
+        }
+
+        .btn-jugar {
+            background: linear-gradient(135deg, #65ecf8 0%, #29b6f6 100%);
+            color: white;
+            grid-column: 2;
+        }
+
+        .btn-dormir {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            grid-column: 1;
+        }
+
+        .btn-acariciar {
+            background: linear-gradient(135deg, #ff6b9d 0%, #ec407a 100%);
+            color: white;
+            grid-column: 2;
+        }
+
+        .btn-minijuego {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .btn-minijuego:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(245, 87, 108, 0.4);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding-top: 15px;
+            border-top: 2px solid #f0f0f0;
+            font-size: 0.85rem;
+            color: #999;
+        }
+
+        .btn-reset {
+            background: #f0f0f0;
+            color: #666;
+            border: 2px solid #ddd;
+            padding: 8px 16px;
+            margin-top: 10px;
+            font-size: 0.8rem;
+        }
+
+        .btn-reset:hover {
+            background: #e0e0e0;
+        }
+
+        /* Notificación */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            animation: slideInRight 0.4s ease-out;
+            z-index: 1000;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Modal de Minijuegos */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 2000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 25px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.4s ease-out;
+            position: relative;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .modal-subtitle {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #333;
+            transform: scale(1.2);
+        }
+
+        .minigames-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .minigame-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .minigame-card:hover {
+            transform: translateY(-5px);
+            border-color: #667eea;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .minigame-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .minigame-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .minigame-desc {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .minigame-reward {
+            font-size: 0.85rem;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        /* Modal de Resultado */
+        .result-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 3000;
+        }
+
+        .result-modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .result-content {
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .result-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .result-message {
+            font-size: 1.2rem;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .result-score {
+            font-size: 2rem;
+            color: #764ba2;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .result-rewards {
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(76, 175, 80, 0.05));
+            border: 2px solid #4caf50;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .reward-item {
+            font-size: 1.1rem;
+            color: #4caf50;
+            font-weight: 600;
+            margin: 8px 0;
+        }
+
+        .btn-continue {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-continue:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                max-width: 100%;
+                padding: 20px;
+                border-radius: 20px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .taco-emoji {
+                font-size: 4rem;
+            }
+
+            .taco-area {
+                min-height: 200px;
+                padding: 20px;
+            }
+
+            .stats {
+                gap: 10px;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .btn {
+                padding: 12px;
+                font-size: 0.85rem;
+            }
+
+            .actions {
+                gap: 10px;
+            }
+
+            .notification {
+                right: 10px;
+                left: 10px;
+                width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🐱 Cuidando a Taco</h1>
+            <p class="subtitle">Tu Tamagotchi Virtual</p>
+            <p class="edad-display" id="edadDisplay">Edad: 0 días</p>
+        </div>
+
+        <!-- Recomendación -->
+        <div class="recomendacion" id="recomendacion">
+            ✨ Taco está en perfecto estado! Sigue así!
+        </div>
+
+        <!-- Área de Taco -->
+        <div class="taco-area">
+            <div class="taco-nombre" id="tacoNombre">Taco</div>
+            <div class="taco-emoji" id="tacoEmoji">😺</div>
+            <div class="taco-chat" id="tacoChat">
+                ¡Hola! ¿Qué tal estamos hoy? 😺
+            </div>
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="stats">
+            <div class="stat-card hambre">
+                <div class="stat-label">🍖 Hambre</div>
+                <div class="stat-value" id="hambreValue">50</div>
+                <div class="stat-bar">
+                    <div class="stat-bar-fill" id="hambreBar" style="width: 50%"></div>
+                </div>
+            </div>
+            <div class="stat-card energia">
+                <div class="stat-label">⚡ Energía</div>
+                <div class="stat-value" id="energiaValue">70</div>
+                <div class="stat-bar">
+                    <div class="stat-bar-fill" id="energiaBar" style="width: 70%"></div>
+                </div>
+            </div>
+            <div class="stat-card felicidad">
+                <div class="stat-label">❤️ Felicidad</div>
+                <div class="stat-value" id="felicidadValue">60</div>
+                <div class="stat-bar">
+                    <div class="stat-bar-fill" id="felicidadBar" style="width: 60%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones de acciones -->
+        <div class="actions">
+            <button class="btn btn-alimentar" id="btnAlimentar" onclick="accion('alimentar')">
+                🍖 Alimentar
+            </button>
+            <button class="btn btn-jugar" id="btnJugar" onclick="accion('jugar')">
+                🎾 Jugar
+            </button>
+            <button class="btn btn-dormir" id="btnDormir" onclick="accion('dormir')">
+                😴 Dormir
+            </button>
+            <button class="btn btn-acariciar" id="btnAcariciar" onclick="accion('acariciar')">
+                🤗 Acariciar
+            </button>
+        </div>
+
+        <!-- Botón de minijuegos -->
+        <button class="btn btn-minijuego" id="btnMinijuego" onclick="abrirMinijuego()" style="width: 100%; margin-bottom: 15px;">
+            🎮 Minijuegos
+        </button>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Cuida bien a Taco para mantenerlo feliz</p>
+            <button class="btn btn-reset" onclick="reiniciar()">🔄 Reiniciar</button>
+        </div>
+    </div>
+
+    <!-- Modal de Minijuegos -->
+    <div class="modal-overlay" id="modalMinijuegos">
+        <div class="modal">
+            <button class="close-btn" onclick="cerrarMinijuego()">✕</button>
+            <div class="modal-header">
+                <div class="modal-title">🎮 Minijuegos de Taco</div>
+                <div class="modal-subtitle">¡Elige un juego para jugar con Taco!</div>
+            </div>
+            <div class="minigames-grid" id="minigamesGrid">
+                <!-- Se llena dinámicamente con JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Resultados -->
+    <div class="result-modal" id="resultModal">
+        <div class="result-content">
+            <div class="result-title" id="resultTitle">¡Juego completado!</div>
+            <div class="result-message" id="resultMessage">¡Taco lo hizo genial!</div>
+            <div class="result-score" id="resultScore">0/100</div>
+            <div class="result-rewards" id="resultRewards">
+                <!-- Se llena dinámicamente -->
+            </div>
+            <button class="btn-continue" onclick="cerrarResultados()">Continuar</button>
+        </div>
+    </div>
+
+    <script src="api.js"></script>
+    <script>
+        /**
+         * Controlador del Tamagotchi Taco
+         */
+
+        // Estado actual
+        let estado = { ...estadoInicial };
+
+        // Timer para envejecimiento
+        let timerEnvejecimiento;
+
+        /**
+         * Actualiza la interfaz visual
+         */
+        function actualizarUI() {
+            // Valores
+            document.getElementById('hambreValue').textContent = Math.round(estado.hambre);
+            document.getElementById('energiaValue').textContent = Math.round(estado.energia);
+            document.getElementById('felicidadValue').textContent = Math.round(estado.felicidad);
+
+            // Barras de progreso
+            document.getElementById('hambreBar').style.width = estado.hambre + '%';
+            document.getElementById('energiaBar').style.width = estado.energia + '%';
+            document.getElementById('felicidadBar').style.width = estado.felicidad + '%';
+
+            // Emoji
+            document.getElementById('tacoEmoji').textContent = obtenerEmojiTaco(estado);
+
+            // Edad
+            document.getElementById('edadDisplay').textContent = `Edad: ${estado.edad} días`;
+
+            // Recomendación
+            document.getElementById('recomendacion').textContent = obtenerRecomendacion(estado);
+
+            // Desactivar botones según estado
+            document.getElementById('btnJugar').disabled = estado.energia < 20;
+            document.getElementById('btnDormir').disabled = estado.energia > 95;
+            document.getElementById('btnAlimentar').disabled = estado.hambre < 10;
+        }
+
+        /**
+         * Ejecuta una acción
+         */
+        function accion(tipo) {
+            const emoji = document.getElementById('tacoEmoji');
+
+            switch (tipo) {
+                case 'alimentar':
+                    emoji.classList.add('eat');
+                    estado = alimentarTaco(estado);
+                    mostrarNotificacion('¡Taco está comiendo! 🍖');
+                    break;
+                case 'jugar':
+                    emoji.classList.add('play');
+                    estado = jugarConTaco(estado);
+                    mostrarNotificacion('¡Taco está jugando! 🎾');
+                    break;
+                case 'dormir':
+                    emoji.classList.add('sleep');
+                    estado = dormirTaco(estado);
+                    mostrarNotificacion('¡Taco está durmiendo! 😴');
+                    break;
+                case 'acariciar':
+                    emoji.classList.add('pet');
+                    estado = acariciarTaco(estado);
+                    mostrarNotificacion('¡Taco ronronea feliz! 🐱');
+                    break;
+            }
+
+            // Remover animación
+            setTimeout(() => {
+                emoji.classList.remove('eat', 'sleep', 'play', 'pet');
+            }, 600);
+
+            // Generar respuesta de Taco
+            actualizarChat();
+            actualizarUI();
+        }
+
+        /**
+         * Actualiza el chat con la respuesta de Taco
+         */
+        function actualizarChat() {
+            const respuesta = generarRespuestaTaco(estado);
+            document.getElementById('tacoChat').textContent = respuesta;
+        }
+
+        /**
+         * Muestra una notificación
+         */
+        function mostrarNotificacion(mensaje) {
+            const notif = document.createElement('div');
+            notif.className = 'notification';
+            notif.textContent = mensaje;
+            document.body.appendChild(notif);
+
+            setTimeout(() => {
+                notif.remove();
+            }, 2000);
+        }
+
+        /**
+         * Reinicia el juego
+         */
+        function reiniciar() {
+            if (confirm('¿Estás seguro de que quieres reiniciar? 😿')) {
+                estado = { ...estadoInicial };
+                clearInterval(timerEnvejecimiento);
+                actualizarUI();
+                actualizarChat();
+                iniciarJuego();
+                mostrarNotificacion('¡Taco ha nacido nuevamente! 🐱');
+            }
+        }
+
+        /**
+         * Abre el modal de minijuegos
+         */
+        function abrirMinijuego() {
+            const modal = document.getElementById('modalMinijuegos');
+            const grid = document.getElementById('minigamesGrid');
+
+            const juegosInfo = [
+                { 
+                    nombre: 'Caza de Ratones', 
+                    icon: '🐭', 
+                    desc: 'Ayuda a Taco a cazar ratones',
+                    funcion: juegoCazaRatones,
+                    reward: 'Felicidad +20'
+                },
+                { 
+                    nombre: 'Juego de Reflejos', 
+                    icon: '⚡', 
+                    desc: 'Prueba los reflejos de Taco',
+                    funcion: juegoReflejos,
+                    reward: 'Felicidad +30'
+                },
+                { 
+                    nombre: 'Puzzle', 
+                    icon: '🧩', 
+                    desc: 'Resuelve un puzzle con Taco',
+                    funcion: juegoPuzzle,
+                    reward: 'Felicidad +25'
+                },
+                { 
+                    nombre: 'Carreras', 
+                    icon: '🏎️', 
+                    desc: 'Corre con Taco',
+                    funcion: juegoCarreras,
+                    reward: 'Felicidad +35'
+                },
+                { 
+                    nombre: 'Pesca', 
+                    icon: '🎣', 
+                    desc: 'Pesca con Taco',
+                    funcion: juegoPesca,
+                    reward: 'Felicidad +28'
+                }
+            ];
+
+            grid.innerHTML = juegosInfo.map((juego, idx) => `
+                <div class="minigame-card" onclick="jugarMinijuegoSeleccionado(${idx})">
+                    <div class="minigame-icon">${juego.icon}</div>
+                    <div class="minigame-name">${juego.nombre}</div>
+                    <div class="minigame-desc">${juego.desc}</div>
+                    <div class="minigame-reward">${juego.reward}</div>
+                </div>
+            `).join('');
+
+            modal.classList.add('show');
+        }
+
+        /**
+         * Juega el minijuego seleccionado
+         */
+        function jugarMinijuegoSeleccionado(indice) {
+            const juegos = [juegoCazaRatones, juegoReflejos, juegoPuzzle, juegoCarreras, juegoPesca];
+            const juego = juegos[indice];
+
+            // Cerrar modal de selección
+            document.getElementById('modalMinijuegos').classList.remove('show');
+
+            // Mostrar que Taco está jugando
+            document.getElementById('tacoChat').textContent = '¡Voy a jugar! 🎮';
+            document.getElementById('taco').style.animation = 'bounce 0.6s infinite';
+
+            // Ejecutar el juego
+            juego().then(resultado => {
+                mostrarResultado(resultado);
+            });
+        }
+
+        /**
+         * Muestra el resultado del minijuego
+         */
+        function mostrarResultado(resultado) {
+            const resultModal = document.getElementById('resultModal');
+            document.getElementById('resultTitle').textContent = resultado.nombre;
+            document.getElementById('resultMessage').textContent = resultado.mensaje;
+            document.getElementById('resultScore').textContent = `${resultado.puntuacion}/${resultado.maxPuntos}`;
+
+            const rewardsDiv = document.getElementById('resultRewards');
+            let rewardsHTML = '';
+            
+            if (resultado.recompensas.felicidad !== 0) {
+                rewardsHTML += `<div class="reward-item">😊 Felicidad: ${resultado.recompensas.felicidad > 0 ? '+' : ''}${resultado.recompensas.felicidad}</div>`;
+            }
+            if (resultado.recompensas.energia !== 0) {
+                rewardsHTML += `<div class="reward-item">⚡ Energía: ${resultado.recompensas.energia > 0 ? '+' : ''}${resultado.recompensas.energia}</div>`;
+            }
+            if (resultado.recompensas.hambre !== 0) {
+                rewardsHTML += `<div class="reward-item">🍽️ Hambre: ${resultado.recompensas.hambre > 0 ? '+' : ''}${resultado.recompensas.hambre}</div>`;
+            }
+
+            rewardsDiv.innerHTML = rewardsHTML || '<div class="reward-item">Sin cambios</div>';
+
+            // Guardar el resultado para aplicarlo
+            window.ultimoResultado = resultado;
+
+            // Detener animación de Taco
+            document.getElementById('taco').style.animation = '';
+
+            resultModal.classList.add('show');
+        }
+
+        /**
+         * Cierra el modal de resultados y aplica las recompensas
+         */
+        function cerrarResultados() {
+            const resultModal = document.getElementById('resultModal');
+            resultModal.classList.remove('show');
+
+            if (window.ultimoResultado) {
+                // Aplicar recompensas
+                estado = aplicarRecompensasMinijuego(estado, window.ultimoResultado.recompensas);
+                actualizarUI();
+                actualizarChat();
+                mostrarNotificacion(`¡Taco ganó experiencia! 🎉`);
+            }
+        }
+
+        /**
+         * Cierra el modal de minijuegos
+         */
+        function cerrarMinijuego() {
+            document.getElementById('modalMinijuegos').classList.remove('show');
+        }
+
+        /**
+         * Inicia el juego
+         */
+        function iniciarJuego() {
+            actualizarUI();
+            actualizarChat();
+
+            // Envejecer cada 10 segundos (simular paso del tiempo)
+            timerEnvejecimiento = setInterval(() => {
+                estado = envejecerTaco(estado);
+                actualizarUI();
+
+                // Si algo crítico, que Taco se queje
+                if (estado.hambre > 75 || estado.energia < 25 || estado.felicidad < 25) {
+                    actualizarChat();
+                }
+            }, 10000);
+        }
+
+        // Iniciar el juego
+        iniciarJuego();
+
+        console.log('🐱 Tamagotchi Taco iniciado! Cuida bien a Taco 💕');
+    </script>
+</body>
+</html>
